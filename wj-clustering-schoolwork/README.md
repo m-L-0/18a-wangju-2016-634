@@ -46,6 +46,8 @@ def calEuclidDistanceMatrix(X): <br>
 1.计算距离矩阵<br>
 2.利用KNN计算邻接矩阵A<br>
 3.由A计算度数矩阵D和拉普拉斯矩阵L<br>
+4.标准化L=D^(-1/2) L D^(-1/2)<br>
+
 #3标准化的拉普拉斯矩阵<br>
 def calLaplacianMatrix(adjacentMatrix):<br>
     #compute the Degree Matrix:D=sum(A)<br>
@@ -57,6 +59,62 @@ def calLaplacianMatrix(adjacentMatrix):<br>
     sqrtDegreeMatrix = np.diag(1.0 / (degreeMatrix ** (0.5)))<br>
     return np.dot(np.dot(sqrtDegreeMatrix, laplacianMatrix), sqrtDegreeMatrix)<br>
 
-4.标准化L=D^(-1/2) L D^(-1/2)<br>
 5.对称阵L=D^(-1/2) L D^(-1/2)进行特征值分解，得到特征向量Hnn#6.将Hnn当成样本送入Kmeans<br>
+
+eig_x,V= np.linalg.eig(Laplacian) # H'shape is n*n# H'shape is n*n<br>
+eig_x=np.array(eig_x,dtype=np.float32)<br>
+V=np.array(V,dtype=np.float32)<br>
+eig_x=zip(eig_x,range(len(x)))<br>
+eig_x=sorted(eig_x, key=lambda eig_x:eig_x[0])<br>
+H = np.vstack([V[:,i] for (v, i) in eig_x[:6]]).T#(shape (150,6))<br>
+#试了试是前6个正确率最高<br>
+#将H按行进行归一化<br>
+Hmax,Hmin=H.max(axis=0),H.min(axis=0)<br>
+H=(H-Hmin)/(Hmax-Hmin)<br>
+
+
 7.获得聚类结果C=（C1，C2，....Ck）<br>
+
+sp_kmeans=KMeans(n_clusters=3,n_init=13,random_state=17).fit(H)<br>
+
+任务五：将聚类结果可视化，重新转换成图的形式，其中每一个簇应该用一种形状表示，比如分别用圆圈、三角和矩阵表示各个簇<br>
+=
+N=nx.Graph()<br>
+for i in range(150):<br>
+    N.add_node(i)<br>
+#print(N.nodes())<br>
+edglist=[]<br>
+for i in range(150):<br>
+    for j in range(150):<br>
+        if(A[i][j]>0):<br>
+            edglist.append((i,j))<br>
+#print(edglist)<br>
+colorlist=[]<br>
+shapelist=[]<br>
+N.add_edges_from(edglist)<br>
+for i in range(150):<br>
+    if(y[i]==0):<br>
+        colorlist.append('r')<br>
+        shapelist.append('s')<br>
+    elif(y[i]==1):<br>
+        colorlist.append('b')<br>
+        shapelist.append('^')<br>
+    else:<br>
+        colorlist.append('orange')<br>
+        shapelist.append('+')<br>
+#print(N.neighbors((data_new[1][0],data_new[1][1])))<br>
+#print(N[(data_new[1][0],data_new[1][1])])<br>
+nx.draw(N,pos = nx.circular_layout(N),node_color = colorlist,edge_color = 'black',with_labels = False,font_size =5,node_shape='o' ,node_size =25,width=0.3)<br>
+
+plt.show()<br>
+
+任务六：求得分簇正确率<br>
+=
+#计算正确率<br>
+count=0<br>
+for i in range(150):<br>
+    if y[i]==sp_kmeans.labels_[i]:<br>
+        count=count+1<br>
+print('Accuracy:',100*(count/150),'%')<br>
+
+目前得到的正确率为81.3%
