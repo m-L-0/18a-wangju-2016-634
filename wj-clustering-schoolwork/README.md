@@ -6,7 +6,7 @@
 
 任务二：确定一个合适的阈值，只有两个样本之间的相似度大于该阈值时，这两个样本之间才有一条边。
 =
-1.计算距离矩阵<br>
+##1.计算距离矩阵<br>
 def euclidDistance(x1,x2,sqrt_flag=False):<br>
     res = np.sum((x1-x2)**2)#这么计算距离正好对应求高斯核的公式<br>
     if sqrt_flag:<br>
@@ -20,4 +20,4 @@ def calEuclidDistanceMatrix(X): <br>
             S[i][j] = 1.0 * euclidDistance(X[i], X[j]) <br>
             S[j][i] = S[i][j] <br>
     return S<br>
-2.利用knn计算邻接矩阵<br>
+##2.利用knn计算邻接矩阵<br>
