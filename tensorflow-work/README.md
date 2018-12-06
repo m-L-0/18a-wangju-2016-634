@@ -30,24 +30,27 @@ def counter(arr):
   
   （先得到前k个近邻在训练集中的索引，在找到相应的类别标签）
   
-       indices_ = tf.nn.top_k(-distance, k=k_num).indices#前k个近邻索引
+       
+      for i in range(len(x_validation)):
+
+          #计算l1距离
         
-        with tf.Session() as sess:
-            
-            sess.run(distance)
-            
-            sess.run(-value_)
-            
-            indices=np.array(sess.run(indices_))
+          d=sess.run(distance,feed_dict={xtrain:x_train,xtest:x_validation[i]})
         
-        #获取前k个近邻的标签
+          value_ = tf.nn.top_k(-d, k=k_num).values
         
-        a=[]
+          indices_ = tf.nn.top_k(-d, k=k_num).indices#前k个近邻索引
         
-        for j in range(len(indices)):
+          indices=np.array(sess.run(indices_))
+          
+          #获取前k个近邻的标签
+        
+          a=[]
+        
+          for j in range(len(indices)):
             
-            a.append(y_train[indices[j]])
-      
+              a.append(y_train[indices[j]])
+            
     
 3.k个近邻中出现次数最多的类别预测为测试样本的类别
 
@@ -82,11 +85,10 @@ def counter(arr):
      
      #验证模型
 
-     for m in range(1,5):
+     for i in range(1,11):
     
-          k_nn(m,Ntest)
-         
-###经过验证模型，k取值1到4 正确率都是100%，选择超参数k=1
+         knn(i)
+###经过验证模型，k取值1到10 
 
 任务五：提交模型
 --------
