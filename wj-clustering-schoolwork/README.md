@@ -1,7 +1,6 @@
 Clustering Schoolwork
 ==
-<br>
-###任务一：将鸢尾花数据集画成图的形式。<br>
+任务一：将鸢尾花数据集画成图的形式。<br>
 --
 <br>
 1.借助sklearn包，导入数据集<br>
