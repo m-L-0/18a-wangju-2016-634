@@ -14,15 +14,16 @@
 任务三：求取带权邻接矩阵。<br/>
 --
 ###1.计算距离矩阵<br>
+
 def euclidDistance(x1,x2,sqrt_flag=False):<br>
 
-    res = np.sum((x1-x2)**2)  这么计算距离正好对应求高斯核的公式<br>
+    res = np.sum((x1-x2)**2)  这么计算距离正好对应求高斯核的公式
     
-    if sqrt_flag:<br>
+    if sqrt_flag:
     
-        res = np.sqrt(res)<br>
+        res = np.sqrt(res)
         
-    return res<br>
+    return res
     
 def calEuclidDistanceMatrix(X): <br>
 
