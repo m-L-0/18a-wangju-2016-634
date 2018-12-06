@@ -1,12 +1,16 @@
-任务一：将鸢尾花数据集画成图的形式。
+Clustering Schoolwork
 =
+<br>
+任务一：将鸢尾花数据集画成图的形式。
+--
 1.借助sklearn包，导入数据集<br>
 2.利用逻辑回归模型训练样本集<br>
 3.绘制散点图<br>
 
 任务二：确定一个合适的阈值，只有两个样本之间的相似度大于该阈值时，这两个样本之间才有一条边。<br>
+--
 任务三：求取带权邻接矩阵。<br/>
-=
+--
 1.计算距离矩阵<br>
 def euclidDistance(x1,x2,sqrt_flag=False):<br>
     res = np.sum((x1-x2)**2)  这么计算距离正好对应求高斯核的公式<br>
@@ -39,8 +43,8 @@ def calEuclidDistanceMatrix(X): <br>
             A[j][i] = A[i][j] # mutually 邻接矩阵是对称的<br>
     return A<br>
    
-   任务四：根据邻接矩阵进行聚类。<br>
-   =
+任务四：根据邻接矩阵进行聚类。<br>
+   --
 
 谱聚类实现过程<br>
 1.计算距离矩阵<br>
@@ -78,7 +82,7 @@ H=(H-Hmin)/(Hmax-Hmin)<br>
 sp_kmeans=KMeans(n_clusters=3,n_init=13,random_state=17).fit(H)<br>
 
 任务五：将聚类结果可视化，重新转换成图的形式，其中每一个簇应该用一种形状表示，比如分别用圆圈、三角和矩阵表示各个簇<br>
-=
+--
 N=nx.Graph()<br>
 for i in range(150):<br>
     N.add_node(i)<br>
@@ -109,7 +113,7 @@ nx.draw(N,pos = nx.circular_layout(N),node_color = colorlist,edge_color = 'black
 plt.show()<br>
 
 任务六：求得分簇正确率<br>
-=
+--
 #计算正确率<br>
 count=0<br>
 for i in range(150):<br>
@@ -120,4 +124,5 @@ print('Accuracy:',100*(count/150),'%')<br>
 目前得到的正确率为81.3%
 
 任务七：完成代码的描述文档
+--
 已完成
