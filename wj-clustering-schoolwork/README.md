@@ -2,7 +2,6 @@
 ==
 任务一：将鸢尾花数据集画成图的形式。<br>
 --
-<br>
 1.借助sklearn包，导入数据集<br>
 
 2.利用逻辑回归模型训练样本集<br>
@@ -27,19 +26,19 @@ def euclidDistance(x1,x2,sqrt_flag=False):<br>
     
 def calEuclidDistanceMatrix(X): <br>
 
-    X = np.array(X)<br>
+    X = np.array(X)
     
-    S = np.zeros((len(X), len(X)))<br>
+    S = np.zeros((len(X), len(X)))
     
-    for i in range(len(X)):<br>
+    for i in range(len(X)):
     
-        for j in range(i+1, len(X)): <br>
+        for j in range(i+1, len(X)): 
         
-            S[i][j] = 1.0 * euclidDistance(X[i], X[j]) <br>
+            S[i][j] = 1.0 * euclidDistance(X[i], X[j])
             
-            S[j][i] = S[i][j] 距离矩阵是对称阵<br>
+            S[j][i] = S[i][j] 距离矩阵是对称阵
             
-    return S<br>
+    return S
     
 ###2.利用knn计算邻接矩阵<br>
 
@@ -51,27 +50,27 @@ sigma在0.1到10之间试的<br>
 
  def myKNN(S,k,sigma=0.187):<br>
  
-    N=len(S)<br>
+    N=len(S)
     
-    A=np.zeros((N,N))<br>
+    A=np.zeros((N,N))
     
-    for i in range(N):<br>
+    for i in range(N):
     
-        dist_with_index=zip(S[i],range(N))#带索引的距离<br>
+        dist_with_index=zip(S[i],range(N))#带索引的距离
         
-        dist_with_index=sorted(dist_with_index,key=lambda x:x[0])#按距离从小到大排序<br>
+        dist_with_index=sorted(dist_with_index,key=lambda x:x[0])#按距离从小到大排序
         
-        neighbours_id=[dist_with_index[m][1] for m in range(k+1)]#得到前k个最近邻的索引<br>
+        neighbours_id=[dist_with_index[m][1] for m in range(k+1)]#得到前k个最近邻的索引
         
-        # xi's k nearest neighbours<br>
+        # xi's k nearest neighbours
         
-        for j in neighbours_id:# xj is xi's neighbour<br>
+        for j in neighbours_id:# xj is xi's neighbour
         
-            A[i][j] = np.exp(-S[i][j]/2/sigma/sigma)#高斯核<br>
+            A[i][j] = np.exp(-S[i][j]/2/sigma/sigma)#高斯核
             
-            A[j][i] = A[i][j] # mutually 邻接矩阵是对称的<br>
+            A[j][i] = A[i][j] # mutually 邻接矩阵是对称的
             
-    return A<br>
+    return A
    
 任务四：根据邻接矩阵进行聚类。<br>
    --
@@ -97,21 +96,21 @@ sigma在0.1到10之间试的<br>
 
 def calLaplacianMatrix(adjacentMatrix):<br>
 
-    #compute the Degree Matrix:D=sum(A)<br>
+    #compute the Degree Matrix:D=sum(A)
     
-    degreeMatrix=np.sum(adjacentMatrix,axis=1)<br>
+    degreeMatrix=np.sum(adjacentMatrix,axis=1)
     
-    #compute the Laplacian Matrix:L=D-A<br>
+    #compute the Laplacian Matrix:L=D-A
     
-    laplacianMatrix=np.diag(degreeMatrix)-adjacentMatrix#度数矩阵是对角矩阵<br>
+    laplacianMatrix=np.diag(degreeMatrix)-adjacentMatrix#度数矩阵是对角矩阵
     
-    #normailize<br>
+    #normailize
     
-     # D^(-1/2) L D^(-1/2)<br>
+     # D^(-1/2) L D^(-1/2)
      
-    sqrtDegreeMatrix = np.diag(1.0 / (degreeMatrix ** (0.5)))<br>
+    sqrtDegreeMatrix = np.diag(1.0 / (degreeMatrix ** (0.5)))
     
-    return np.dot(np.dot(sqrtDegreeMatrix, laplacianMatrix), sqrtDegreeMatrix)<br>
+    return np.dot(np.dot(sqrtDegreeMatrix, laplacianMatrix), sqrtDegreeMatrix)
     
 
 ###5.对称阵L=D^(-1/2) L D^(-1/2)进行特征值分解，得到特征向量Hnn<br>
@@ -153,7 +152,7 @@ N=nx.Graph()<br>
 
 for i in range(150):<br>
 
-    N.add_node(i)<br>
+    N.add_node(i)
     
 #print(N.nodes())<br>
 
@@ -163,11 +162,11 @@ edglist=[]<br>
 
 for i in range(150):<br>
 
-    for j in range(150):<br>
+    for j in range(150):
     
-        if(A[i][j]>0):<br>
+        if(A[i][j]>0):
         
-            edglist.append((i,j))<br>
+            edglist.append((i,j))
             
 #print(edglist)<br>
 
@@ -179,17 +178,17 @@ N.add_edges_from(edglist)<br>
 
 for i in range(150):<br>
 
-    if(y[i]==0):<br>
+    if(y[i]==0):
     
-        colorlist.append('r')<br>
+        colorlist.append('r')
         
-    elif(y[i]==1):<br>
+    elif(y[i]==1):
     
-        colorlist.append('b')<br>
+        colorlist.append('b')
         
-    else:<br>
+    else:
     
-        colorlist.append('orange')<br>
+        colorlist.append('orange')
         
 #print(N.neighbors((data_new[1][0],data_new[1][1])))<br>
 
@@ -212,9 +211,9 @@ count=0<br>
 
 for i in range(150):<br>
 
-    if y[i]==sp_kmeans.labels_[i]:<br>
+    if y[i]==sp_kmeans.labels_[i]:
     
-        count=count+1<br>
+        count=count+1
         
 print('Accuracy:',100*(count/150),'%')<br>
 
