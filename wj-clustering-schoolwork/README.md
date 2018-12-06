@@ -11,7 +11,7 @@
 --
 任务三：求取带权邻接矩阵。<br/>
 --
-1.计算距离矩阵<br>
+###1.计算距离矩阵<br>
 def euclidDistance(x1,x2,sqrt_flag=False):<br>
     res = np.sum((x1-x2)**2)  这么计算距离正好对应求高斯核的公式<br>
     if sqrt_flag:<br>
@@ -24,12 +24,14 @@ def calEuclidDistanceMatrix(X): <br>
     for i in range(len(X)):<br>
         for j in range(i+1, len(X)): <br>
             S[i][j] = 1.0 * euclidDistance(X[i], X[j]) <br>
-            S[j][i] = S[i][j] <br>
+            S[j][i] = S[i][j] 距离矩阵是对称阵<br>
     return S<br>
-2.利用knn计算邻接矩阵<br>
+    
+###2.利用knn计算邻接矩阵<br>
 
 根据距离矩阵，计算每个点的前k个近邻，在对这个点与k个近邻的距离带入高斯核的公式，得到带权邻接矩阵。<br>
 带权邻接矩阵中为0的代表两个点之间没有边，相反有边<br>
+sigma在0.1到10之间试的<br>
  def myKNN(S,k,sigma=0.187):<br>
     N=len(S)<br>
     A=np.zeros((N,N))<br>
@@ -47,12 +49,16 @@ def calEuclidDistanceMatrix(X): <br>
    --
 
 谱聚类实现过程<br>
-1.计算距离矩阵<br>
-2.利用KNN计算邻接矩阵A<br>
-3.由A计算度数矩阵D和拉普拉斯矩阵L<br>
-4.标准化L=D^(-1/2) L D^(-1/2)<br>
+11.计算距离矩阵<br>
+22.利用KNN计算邻接矩阵A<br>
+33.由A计算度数矩阵D和拉普拉斯矩阵L<br>
+44.标准化L=D^(-1/2) L D^(-1/2)<br>
+55.对称阵L=D^(-1/2) L D^(-1/2)进行特征值分解，得到特征向量Hnn<br>
+66.将Hnn当成样本送入Kmeans<br>
+77.获得聚类结果C=（C1，C2，....Ck）<br>
 
-#3标准化的拉普拉斯矩阵<br>
+###3标准化的拉普拉斯矩阵(以上两步，前两个任务就完成了)<br>
+
 def calLaplacianMatrix(adjacentMatrix):<br>
     #compute the Degree Matrix:D=sum(A)<br>
     degreeMatrix=np.sum(adjacentMatrix,axis=1)<br>
@@ -63,13 +69,14 @@ def calLaplacianMatrix(adjacentMatrix):<br>
     sqrtDegreeMatrix = np.diag(1.0 / (degreeMatrix ** (0.5)))<br>
     return np.dot(np.dot(sqrtDegreeMatrix, laplacianMatrix), sqrtDegreeMatrix)<br>
 
-5.对称阵L=D^(-1/2) L D^(-1/2)进行特征值分解，得到特征向量Hnn#6.将Hnn当成样本送入Kmeans<br>
+###5.对称阵L=D^(-1/2) L D^(-1/2)进行特征值分解，得到特征向量Hnn<br>
+###6.将Hnn当成样本送入Kmeans<br>
 
 eig_x,V= np.linalg.eig(Laplacian) # H'shape is n*n# H'shape is n*n<br>
 eig_x=np.array(eig_x,dtype=np.float32)<br>
 V=np.array(V,dtype=np.float32)<br>
 eig_x=zip(eig_x,range(len(x)))<br>
-eig_x=sorted(eig_x, key=lambda eig_x:eig_x[0])<br>
+eig_x=sorted(eig_x, key=lambda eig_x:eig_x[0])特征值从大到小排列<br>
 H = np.vstack([V[:,i] for (v, i) in eig_x[:6]]).T#(shape (150,6))<br>
 #试了试是前6个正确率最高<br>
 #将H按行进行归一化<br>
@@ -88,24 +95,22 @@ for i in range(150):<br>
     N.add_node(i)<br>
 #print(N.nodes())<br>
 edglist=[]<br>
+根据邻接矩阵，a[i][j]>0说明两个点之间有边
 for i in range(150):<br>
     for j in range(150):<br>
         if(A[i][j]>0):<br>
             edglist.append((i,j))<br>
 #print(edglist)<br>
+三类对应三种不同的颜色
 colorlist=[]<br>
-shapelist=[]<br>
 N.add_edges_from(edglist)<br>
 for i in range(150):<br>
     if(y[i]==0):<br>
         colorlist.append('r')<br>
-        shapelist.append('s')<br>
     elif(y[i]==1):<br>
         colorlist.append('b')<br>
-        shapelist.append('^')<br>
     else:<br>
         colorlist.append('orange')<br>
-        shapelist.append('+')<br>
 #print(N.neighbors((data_new[1][0],data_new[1][1])))<br>
 #print(N[(data_new[1][0],data_new[1][1])])<br>
 nx.draw(N,pos = nx.circular_layout(N),node_color = colorlist,edge_color = 'black',with_labels = False,font_size =5,node_shape='o' ,node_size =25,width=0.3)<br>
@@ -121,7 +126,7 @@ for i in range(150):<br>
         count=count+1<br>
 print('Accuracy:',100*(count/150),'%')<br>
 
-目前得到的正确率为81.3%
+目前得到的正确率为81.3333333%
 
 任务七：完成代码的描述文档
 --
